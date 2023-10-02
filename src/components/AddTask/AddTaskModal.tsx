@@ -7,7 +7,7 @@ interface AddTaskModalProps {
 }
 
 const AddTaskModal = (props: AddTaskModalProps) => {
-    const openAddTaskModalHandler = () => {
+    const openFormHandler = () => {
         props.setOpenAddTaskModal(false);
     };
 
@@ -17,12 +17,10 @@ const AddTaskModal = (props: AddTaskModalProps) => {
                 <Dialog
                     open={props.openAddTaskModal}
                     PaperProps={{ className: "w-1/2" }}
-                    onClose={openAddTaskModalHandler}
+                    onClose={openFormHandler}
                 >
                     <DialogContent>
-                        <AddTaskForm
-                            openAddTaskModalHandler={openAddTaskModalHandler}
-                        />
+                        <AddTaskForm openFormHandler={openFormHandler} />
                     </DialogContent>
                     <Divider />
                 </Dialog>
