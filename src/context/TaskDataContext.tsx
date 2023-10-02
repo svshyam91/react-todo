@@ -1,7 +1,5 @@
 import { useContext, createContext, useState, ReactNode } from "react";
 
-import { LOCAL_STORAGE_TASKS_KEY } from "../constants";
-
 export interface ITaskData {
     id: string;
     name: string;
@@ -19,44 +17,6 @@ const TaskDataContext = createContext<TaskDataContextType | undefined>(
 
 export const TaskDataProvider = ({ children }: { children: ReactNode }) => {
     const [tasks, setTasks] = useState<ITaskData[]>([]);
-
-    const syncTasksFromLocalStorage = () => {
-        try {
-            const tasks = localStorage.getItem(LOCAL_STORAGE_TASKS_KEY);
-            if (tasks) {
-                setTasks(JSON.parse(tasks));
-            } else {
-                setTasks([]);
-            }
-        } catch (error: unknown) {}
-    };
-
-    const updateTask = (task: ITaskData) => {
-        try {
-            /* Get tasks from local storage */
-            const tasksInLocalStorage = localStorage.getItem(
-                LOCAL_STORAGE_TASKS_KEY
-            );
-            if (tasksInLocalStorage) {
-                const tasksInLocalStorageObj = JSON.parse(
-                    tasksInLocalStorage
-                ) as ITaskData[];
-                const filteredTasks = tasksInLocalStorageObj.filter(
-                    (t) => t.id !== task.id
-                );
-                /* Add updated task in filtered tasks */
-                const updatedTasks = [...filteredTasks, task];
-
-                /* Save in local storage */
-                localStorage.setItem(
-                    LOCAL_STORAGE_TASKS_KEY,
-                    JSON.stringify(updatedTasks)
-                );
-            }
-            /* Sync local state with local storage */
-            syncTasksFromLocalStorage();
-        } catch (error: unknown) {}
-    };
 
     return (
         <TaskDataContext.Provider value={{ tasks, setTasks }}>

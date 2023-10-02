@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useState } from "react";
 import { Grid, TextField, Chip, Button, Divider } from "@mui/material";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
@@ -10,6 +10,7 @@ import { useTaskDataContext } from "../../context/TaskDataContext";
 
 interface IAddTaskFormProps {
     openFormHandler: (openForm: boolean) => void;
+    taskData?: ITaskData;
 }
 
 export interface ITaskData {
@@ -19,14 +20,14 @@ export interface ITaskData {
 }
 
 const AddTaskForm = (props: IAddTaskFormProps) => {
-    const taskNameInputRef = useRef<HTMLInputElement | null>(null);
-    const taskDescriptionInputRef = useRef<HTMLInputElement | null>(null);
+    const [taskName, setTaskName] = useState(props.taskData?.name || "");
+    const [taskDescription, setTaskDescription] = useState(
+        props.taskData?.description || ""
+    );
     const { openSnackbar } = useSnackbar();
     const { setTasks } = useTaskDataContext();
 
     const addTaskHandler = () => {
-        const taskName = taskNameInputRef.current?.value;
-        const taskDescription = taskDescriptionInputRef.current?.value;
         if (!taskName) {
             console.error(
                 "Unable to save task as task name is empty/undefined"
@@ -39,6 +40,53 @@ const AddTaskForm = (props: IAddTaskFormProps) => {
             description: taskDescription,
         });
         props.openFormHandler(false);
+    };
+
+    const editTaskHandler = () => {
+        if (props.taskData) {
+            if (!taskName) {
+                /* TODO: Create separate function for validation and check length of task name and description */
+                console.error(
+                    "Unable to save task as task name is empty/undefined"
+                );
+                return;
+            }
+            updateTask({
+                id: props.taskData.id,
+                name: taskName,
+                description: taskDescription,
+            });
+        }
+    };
+
+    const updateTask = (task: ITaskData) => {
+        try {
+            /* Get tasks from local storage */
+            const tasksInLocalStorage = localStorage.getItem(
+                LOCAL_STORAGE_TASKS_KEY
+            );
+            if (tasksInLocalStorage) {
+                const tasksInLocalStorageObj = JSON.parse(
+                    tasksInLocalStorage
+                ) as ITaskData[];
+                const filteredTasks = tasksInLocalStorageObj.filter(
+                    (t) => t.id !== task.id
+                );
+                /* Add updated task in filtered tasks */
+                const updatedTasks = [...filteredTasks, task];
+
+                /* Save in local storage */
+                localStorage.setItem(
+                    LOCAL_STORAGE_TASKS_KEY,
+                    JSON.stringify(updatedTasks)
+                );
+            }
+            /* Sync local state with local storage */
+            syncTasksFromLocalStorage();
+
+            openSnackbar("Task Updated Successfully", "success");
+            props.openFormHandler(false);
+        } catch (error: unknown) {}
     };
 
     const saveTaskToLocalStorage = (key: string, newTask: ITaskData) => {
@@ -82,7 +130,10 @@ const AddTaskForm = (props: IAddTaskFormProps) => {
                 <Grid container item>
                     <Grid item xs>
                         <TextField
-                            inputRef={taskNameInputRef}
+                            value={taskName}
+                            onChange={(event) =>
+                                setTaskName(event.target.value)
+                            }
                             variant="standard"
                             fullWidth
                             hiddenLabel
@@ -94,7 +145,10 @@ const AddTaskForm = (props: IAddTaskFormProps) => {
                 <Grid container item>
                     <Grid item xs>
                         <TextField
-                            inputRef={taskDescriptionInputRef}
+                            value={taskDescription}
+                            onChange={(event) =>
+                                setTaskDescription(event.target.value)
+                            }
                             variant="standard"
                             fullWidth
                             hiddenLabel
@@ -163,9 +217,11 @@ const AddTaskForm = (props: IAddTaskFormProps) => {
                         variant="contained"
                         size="small"
                         color="secondary"
-                        onClick={addTaskHandler}
+                        onClick={
+                            props.taskData ? editTaskHandler : addTaskHandler
+                        }
                     >
-                        Add Task
+                        {props.taskData ? "Save" : "Add Task"}
                     </Button>
                 </Grid>
             </Grid>

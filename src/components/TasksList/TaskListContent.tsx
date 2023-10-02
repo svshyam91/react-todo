@@ -97,7 +97,10 @@ const TaskListContent = () => {
                 padding={"10px"}
                 marginTop={"5px"}
             >
-                <AddTaskForm openFormHandler={closeEditTaskForm} />
+                <AddTaskForm
+                    openFormHandler={closeEditTaskForm}
+                    taskData={task}
+                />
             </Grid>
         ) : (
             <TaskItem

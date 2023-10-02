@@ -51,8 +51,8 @@ const TaskItem = (props: ITaskItem) => {
                             }
                         />
                     </Grid>
-                    <Grid item>
-                        <Typography variant="body1">
+                    <Grid item overflow={"hidden"}>
+                        <Typography variant="body1" noWrap={true}>
                             {props.taskName}
                         </Typography>
                     </Grid>
@@ -109,6 +109,13 @@ const TaskItem = (props: ITaskItem) => {
                         </Grid>
                     </Grid>
                 )}
+            </Grid>
+            <Grid container item>
+                <Grid item paddingLeft={"38px"} overflow={"hidden"}>
+                    <Typography variant="body2" noWrap={true}>
+                        {props.taskDescription}
+                    </Typography>
+                </Grid>
             </Grid>
             <Grid container item justifyContent={"flex-end"}>
                 <Grid item>

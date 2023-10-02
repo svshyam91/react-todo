@@ -1,4 +1,4 @@
-import { Grid, IconButton } from "@mui/material";
+import { Grid } from "@mui/material";
 
 import TaskListHeader from "./TaskListHeader";
 import TaskListContent from "./TaskListContent";
