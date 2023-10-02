@@ -10,7 +10,7 @@ interface IAddTaskFormProps {
     openAddTaskModalHandler: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-interface ITaskData {
+export interface ITaskData {
     id: `${string}-${string}-${string}-${string}-${string}`;
     name: string;
     description?: string;

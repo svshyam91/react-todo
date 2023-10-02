@@ -15,7 +15,12 @@ import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import ArchiveOutlinedIcon from "@mui/icons-material/ArchiveOutlined";
 
-const TaskItem = () => {
+interface ITaskItem {
+    taskName: string;
+    taskDescription?: string;
+}
+
+const TaskItem = (props: ITaskItem) => {
     const [showExtraIcons, setShowExtraIcons] = useState(false);
 
     const mouseEnterHandler = () => {
@@ -41,7 +46,9 @@ const TaskItem = () => {
                         />
                     </Grid>
                     <Grid item>
-                        <Typography variant="body1">Task 1</Typography>
+                        <Typography variant="body1">
+                            {props.taskName}
+                        </Typography>
                     </Grid>
                 </Grid>
                 {showExtraIcons && (
