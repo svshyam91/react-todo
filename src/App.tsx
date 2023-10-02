@@ -3,23 +3,28 @@ import Header from "./components/Header";
 import Content from "./components/Content";
 
 import { useState } from "react";
+import { SnackbarProvider } from "./context/SnackbarContext";
+import CustomSnackbar from "./components/CustomSnackbar";
 
 function App() {
     const [openAddTaskModal, setOpenAddTaskModal] = useState(false);
 
     return (
-        <Grid container>
+        <SnackbarProvider>
             <Grid container>
-                <Header setOpenAddTaskModal={setOpenAddTaskModal} />
+                <Grid container>
+                    <Header setOpenAddTaskModal={setOpenAddTaskModal} />
+                </Grid>
+                <Grid container>
+                    <Content
+                        setOpenAddTaskModal={setOpenAddTaskModal}
+                        openAddTaskModal={openAddTaskModal}
+                    />
+                </Grid>
+                <Grid container>Footer</Grid>
+                <CustomSnackbar />
             </Grid>
-            <Grid container>
-                <Content
-                    setOpenAddTaskModal={setOpenAddTaskModal}
-                    openAddTaskModal={openAddTaskModal}
-                />
-            </Grid>
-            <Grid container>Footer</Grid>
-        </Grid>
+        </SnackbarProvider>
     );
 }
 

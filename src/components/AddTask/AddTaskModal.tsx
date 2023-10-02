@@ -1,12 +1,5 @@
-import {
-    Dialog,
-    DialogActions,
-    DialogContent,
-    Grid,
-    Divider,
-} from "@mui/material";
+import { Dialog, DialogContent, Grid, Divider } from "@mui/material";
 import AddTaskForm from "./AddTaskForm";
-import AddTaskActions from "./AddTaskActions";
 
 interface AddTaskModalProps {
     setOpenAddTaskModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -27,14 +20,11 @@ const AddTaskModal = (props: AddTaskModalProps) => {
                     onClose={closeAddTaskModalHandler}
                 >
                     <DialogContent>
-                        <AddTaskForm />
-                    </DialogContent>
-                    <Divider />
-                    <DialogActions>
-                        <AddTaskActions
+                        <AddTaskForm
                             closeAddTaskModalHandler={closeAddTaskModalHandler}
                         />
-                    </DialogActions>
+                    </DialogContent>
+                    <Divider />
                 </Dialog>
             </Grid>
         </Grid>
