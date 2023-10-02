@@ -1,15 +1,19 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
 
 import TaskItem from "./TaskItem";
 import { useSnackbar } from "../../context/SnackbarContext";
-import { ITaskData } from "../AddTask/AddTaskForm";
+import AddTaskForm, { ITaskData } from "../AddTask/AddTaskForm";
 import { useTaskDataContext } from "../../context/TaskDataContext";
 import { LOCAL_STORAGE_TASKS_KEY } from "../../constants";
 
 const TaskListContent = () => {
     const { openSnackbar } = useSnackbar();
     const { tasks, setTasks } = useTaskDataContext();
+    const [showEditTask, setShowEditTask] = useState({
+        show: false,
+        taskId: "",
+    });
 
     useEffect(() => {
         const getTasksFromLocalStorage = (key: string) => {
@@ -76,14 +80,33 @@ const TaskListContent = () => {
         } catch (error: unknown) {}
     };
 
+    const closeEditTaskForm = (show: boolean) => {
+        setShowEditTask({ show: show, taskId: "" });
+    };
+
+    const editTaskFormHandler = (taskId: string) => {
+        setShowEditTask({ show: true, taskId: taskId });
+    };
+
     const tasksJSX = tasks.map((task) => {
-        return (
+        return showEditTask.show && task.id === showEditTask.taskId ? (
+            <Grid
+                item
+                xs={12}
+                className="border rounded-xl"
+                padding={"10px"}
+                marginTop={"5px"}
+            >
+                <AddTaskForm openFormHandler={closeEditTaskForm} />
+            </Grid>
+        ) : (
             <TaskItem
                 key={task.id}
                 taskId={task.id}
                 taskName={task.name}
                 taskDescription={task.description}
                 completeTaskHandler={completeTaskHandler}
+                editTaskFormHandler={editTaskFormHandler}
             />
         );
     });

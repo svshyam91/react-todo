@@ -31,21 +31,6 @@ export const TaskDataProvider = ({ children }: { children: ReactNode }) => {
         } catch (error: unknown) {}
     };
 
-    const addTask = (task: ITaskData) => {
-        try {
-            const newTasks = [...tasks, task];
-
-            /* Save in local storage */
-            localStorage.setItem(
-                LOCAL_STORAGE_TASKS_KEY,
-                JSON.stringify(newTasks)
-            );
-
-            /* Sync local state with local storage */
-            syncTasksFromLocalStorage();
-        } catch (error: unknown) {}
-    };
-
     const updateTask = (task: ITaskData) => {
         try {
             /* Get tasks from local storage */
@@ -61,32 +46,6 @@ export const TaskDataProvider = ({ children }: { children: ReactNode }) => {
                 );
                 /* Add updated task in filtered tasks */
                 const updatedTasks = [...filteredTasks, task];
-
-                /* Save in local storage */
-                localStorage.setItem(
-                    LOCAL_STORAGE_TASKS_KEY,
-                    JSON.stringify(updatedTasks)
-                );
-            }
-            /* Sync local state with local storage */
-            syncTasksFromLocalStorage();
-        } catch (error: unknown) {}
-    };
-
-    const removeTask = (taskId: string) => {
-        try {
-            /* Get tasks from local storage */
-            const tasksInLocalStorage = localStorage.getItem(
-                LOCAL_STORAGE_TASKS_KEY
-            );
-            if (tasksInLocalStorage) {
-                /* Filter task that needs to be removed */
-                const tasksInLocalStorageObj = JSON.parse(
-                    tasksInLocalStorage
-                ) as ITaskData[];
-                const updatedTasks = tasksInLocalStorageObj.filter(
-                    (task) => task.id !== taskId
-                );
 
                 /* Save in local storage */
                 localStorage.setItem(

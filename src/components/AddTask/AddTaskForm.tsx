@@ -9,7 +9,7 @@ import { LOCAL_STORAGE_TASKS_KEY } from "../../constants";
 import { useTaskDataContext } from "../../context/TaskDataContext";
 
 interface IAddTaskFormProps {
-    openAddTaskModalHandler: React.Dispatch<React.SetStateAction<boolean>>;
+    openFormHandler: (openForm: boolean) => void;
 }
 
 export interface ITaskData {
@@ -38,7 +38,7 @@ const AddTaskForm = (props: IAddTaskFormProps) => {
             name: taskName,
             description: taskDescription,
         });
-        props.openAddTaskModalHandler(false);
+        props.openFormHandler(false);
     };
 
     const saveTaskToLocalStorage = (key: string, newTask: ITaskData) => {
@@ -153,7 +153,7 @@ const AddTaskForm = (props: IAddTaskFormProps) => {
                         size="small"
                         className="mx-3"
                         color="secondary"
-                        onClick={() => props.openAddTaskModalHandler(false)}
+                        onClick={() => props.openFormHandler(false)}
                     >
                         Cancel
                     </Button>

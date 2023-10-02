@@ -20,6 +20,7 @@ interface ITaskItem {
     taskName: string;
     taskDescription?: string;
     completeTaskHandler: (taskId: string) => void;
+    editTaskFormHandler: (taskId: string) => void;
 }
 
 const TaskItem = (props: ITaskItem) => {
@@ -67,7 +68,9 @@ const TaskItem = (props: ITaskItem) => {
                         <Grid item>
                             <IconButton
                                 color="secondary"
-                                onClick={() => {}}
+                                onClick={() =>
+                                    props.editTaskFormHandler(props.taskId)
+                                }
                                 size="small"
                                 className="font-light"
                             >
