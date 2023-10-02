@@ -16,8 +16,10 @@ import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import ArchiveOutlinedIcon from "@mui/icons-material/ArchiveOutlined";
 
 interface ITaskItem {
+    taskId: string;
     taskName: string;
     taskDescription?: string;
+    completeTaskHandler: (taskId: string) => void;
 }
 
 const TaskItem = (props: ITaskItem) => {
@@ -43,6 +45,9 @@ const TaskItem = (props: ITaskItem) => {
                             icon={<CircleOutlinedIcon />}
                             checkedIcon={<CheckCircleOutlinedIcon />}
                             size="small"
+                            onClick={() =>
+                                props.completeTaskHandler(props.taskId)
+                            }
                         />
                     </Grid>
                     <Grid item>

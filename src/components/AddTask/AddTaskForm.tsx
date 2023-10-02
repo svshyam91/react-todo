@@ -1,17 +1,19 @@
-import { Grid, TextField, Chip, Button, Divider } from "@mui/material";
 import { useRef } from "react";
-
+import { Grid, TextField, Chip, Button, Divider } from "@mui/material";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+
 import { useSnackbar } from "../../context/SnackbarContext";
+import { LOCAL_STORAGE_TASKS_KEY } from "../../constants";
+import { useTaskDataContext } from "../../context/TaskDataContext";
 
 interface IAddTaskFormProps {
     openAddTaskModalHandler: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface ITaskData {
-    id: `${string}-${string}-${string}-${string}-${string}`;
+    id: string;
     name: string;
     description?: string;
 }
@@ -20,6 +22,7 @@ const AddTaskForm = (props: IAddTaskFormProps) => {
     const taskNameInputRef = useRef<HTMLInputElement | null>(null);
     const taskDescriptionInputRef = useRef<HTMLInputElement | null>(null);
     const { openSnackbar } = useSnackbar();
+    const { setTasks } = useTaskDataContext();
 
     const addTaskHandler = () => {
         const taskName = taskNameInputRef.current?.value;
@@ -30,13 +33,12 @@ const AddTaskForm = (props: IAddTaskFormProps) => {
             );
             return;
         }
-        saveTaskToLocalStorage("tasks", {
-            id: crypto.randomUUID(),
+        saveTaskToLocalStorage(LOCAL_STORAGE_TASKS_KEY, {
+            id: crypto.randomUUID().toString(),
             name: taskName,
             description: taskDescription,
         });
         props.openAddTaskModalHandler(false);
-        openSnackbar("Task Saved Successfully", "success");
     };
 
     const saveTaskToLocalStorage = (key: string, newTask: ITaskData) => {
@@ -51,8 +53,26 @@ const AddTaskForm = (props: IAddTaskFormProps) => {
 
             /* Save tasks to local storage */
             localStorage.setItem(key, JSON.stringify(existingTasks));
+
+            /* Sync local state with local storage */
+            syncTasksFromLocalStorage();
+
+            openSnackbar("Task Saved Successfully", "success");
         } catch (error: any) {
             openSnackbar("Failed to save task", "error");
+        }
+    };
+
+    const syncTasksFromLocalStorage = () => {
+        try {
+            const tasks = localStorage.getItem(LOCAL_STORAGE_TASKS_KEY);
+            if (tasks) {
+                setTasks(JSON.parse(tasks));
+            } else {
+                setTasks([]);
+            }
+        } catch (error: unknown) {
+            throw new Error("Unable to sync local state with local storage");
         }
     };
 
