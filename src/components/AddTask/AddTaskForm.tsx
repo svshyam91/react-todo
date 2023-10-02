@@ -7,7 +7,7 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import { useSnackbar } from "../../context/SnackbarContext";
 
 interface IAddTaskFormProps {
-    closeAddTaskModalHandler: React.Dispatch<React.SetStateAction<boolean>>;
+    openAddTaskModalHandler: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface ITaskData {
@@ -35,6 +35,7 @@ const AddTaskForm = (props: IAddTaskFormProps) => {
             name: taskName,
             description: taskDescription,
         });
+        props.openAddTaskModalHandler(false);
         openSnackbar("Task Saved Successfully", "success");
     };
 
@@ -50,7 +51,9 @@ const AddTaskForm = (props: IAddTaskFormProps) => {
 
             /* Save tasks to local storage */
             localStorage.setItem(key, JSON.stringify(existingTasks));
-        } catch (error: any) {}
+        } catch (error: any) {
+            openSnackbar("Failed to save task", "error");
+        }
     };
 
     return (
@@ -130,7 +133,7 @@ const AddTaskForm = (props: IAddTaskFormProps) => {
                         size="small"
                         className="mx-3"
                         color="secondary"
-                        onClick={() => props.closeAddTaskModalHandler(false)}
+                        onClick={() => props.openAddTaskModalHandler(false)}
                     >
                         Cancel
                     </Button>
